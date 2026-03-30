@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReyCloud | Control Center</title>
+    <title>ReyCloud | Dashboard Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,10 +14,10 @@
         #sidebar.open { transform: translateX(0); }
         .menu-item { display: flex; align-items: center; padding: 16px 20px; border-radius: 16px; color: #666; font-weight: 700; transition: 0.3s; cursor: pointer; margin-bottom: 4px; }
         .menu-item:hover, .menu-item.active { background: rgba(250, 204, 21, 0.1); color: #facc15; }
-        .menu-item i { width: 24px; font-size: 18px; margin-right: 12px; }
         .creator-glow { text-shadow: 0 0 15px #facc15; }
         .animate-fade { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -27,36 +27,27 @@
             <h1 class="text-2xl font-black italic uppercase tracking-tighter">REY<span class="text-white">CLOUD</span></h1>
             <button onclick="toggleSide()" class="md:hidden text-gray-500"><i class="fas fa-times text-xl"></i></button>
         </div>
-
         <nav class="flex-grow">
-            <div onclick="showPage('home')" class="menu-item active" id="m-home"><i class="fas fa-th-large"></i> Dashboard</div>
-            <div onclick="showPage('buy')" class="menu-item" id="m-buy"><i class="fas fa-shopping-bag"></i> Buy Panel</div>
-            
-            <div class="h-[1px] bg-white/5 my-6"></div>
-            
-            <div id="admin-menu" class="hidden space-y-1">
-                <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] mb-3 ml-4">Creator Tools</p>
-                <div onclick="showPage('admin')" class="menu-item text-yellow-500" id="m-admin"><i class="fas fa-crown"></i> Admin Panel</div>
+            <div onclick="showPage('home')" class="menu-item active" id="m-home"><i class="fas fa-th-large mr-3"></i> Dashboard</div>
+            <div onclick="showPage('buy')" class="menu-item" id="m-buy"><i class="fas fa-shopping-bag mr-3"></i> Buy Panel</div>
+            <div onclick="showPage('deposit')" class="menu-item" id="m-deposit"><i class="fas fa-wallet mr-3"></i> Top Up</div>
+            <div id="admin-menu" class="hidden mt-6 pt-6 border-t border-white/5">
+                <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] mb-3 ml-4">Owner Only</p>
+                <div onclick="showPage('admin')" class="menu-item text-yellow-500" id="m-admin"><i class="fas fa-crown mr-3"></i> Admin Panel</div>
             </div>
         </nav>
-
-        <div class="pt-6 border-t border-white/5">
-            <button onclick="logout()" class="menu-item text-red-500 w-full hover:bg-red-500/10 transition-colors"><i class="fas fa-power-off"></i> Logout</button>
-        </div>
+        <button onclick="logout()" class="menu-item text-red-500 mt-auto"><i class="fas fa-power-off mr-3"></i> Logout</button>
     </div>
 
-    <div class="min-h-screen transition-all duration-300">
+    <div class="min-h-screen">
         <nav class="p-4 glass sticky top-0 flex justify-between items-center z-50 border-b border-white/5">
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleSide()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-yellow-500 hover:bg-yellow-500/10 transition-all"><i class="fas fa-bars"></i></button>
-                <h2 class="font-black italic text-white uppercase tracking-tighter hidden md:block">Control Center</h2>
-            </div>
+            <button onclick="toggleSide()" class="w-10 h-10 rounded-xl bg-white/5 text-yellow-500"><i class="fas fa-bars"></i></button>
             <div class="flex items-center space-x-4">
                 <div class="text-right">
-                    <p id="u-name" class="text-white font-black text-sm leading-none italic uppercase">Loading...</p>
-                    <p id="u-role" class="text-[9px] font-bold text-gray-500 uppercase mt-1">Status Member</p>
+                    <p id="u-name" class="text-white font-black text-sm italic uppercase">Loading...</p>
+                    <p id="u-role" class="text-[9px] font-bold text-gray-500 uppercase">Member</p>
                 </div>
-                <div id="pfp" class="w-11 h-11 rounded-xl bg-yellow-500 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-yellow-500/20">R</div>
+                <div id="pfp" class="w-11 h-11 rounded-xl bg-yellow-500 flex items-center justify-center text-black font-black text-xl">R</div>
             </div>
         </nav>
 
@@ -64,146 +55,136 @@
             
             <div id="p-home" class="animate-fade space-y-6">
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-yellow-500 relative overflow-hidden group">
-                    <div class="relative z-10">
-                        <h2 class="text-3xl font-black italic text-white uppercase leading-tight">Welcome Back, <br><span class="text-yellow-500" id="w-name">USER</span>! 👑</h2>
-                        <div class="flex items-center mt-6 bg-black/40 backdrop-blur-md w-fit px-4 py-2 rounded-full border border-white/10">
-                            <i class="fas fa-wallet text-yellow-500 mr-3"></i>
-                            <p id="u-bal" class="text-white font-black tracking-widest uppercase text-sm">Rp 0</p>
-                        </div>
+                    <h2 class="text-3xl font-black italic text-white uppercase">Welcome, <br><span class="text-yellow-500" id="w-name">REY</span>!</h2>
+                    <div class="flex items-center mt-6 bg-black/40 w-fit px-4 py-2 rounded-full border border-white/10">
+                        <i class="fas fa-wallet text-yellow-500 mr-3"></i>
+                        <p id="u-bal" class="text-white font-black tracking-widest text-sm">Rp 0</p>
                     </div>
                     <i class="fas fa-bolt absolute -right-6 -bottom-6 text-[10rem] text-white/5 -rotate-12 group-hover:scale-110 transition-transform"></i>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="glass p-6 rounded-3xl border border-white/5">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">Server Active</p>
-                        <h3 class="text-xl font-black italic text-white uppercase">No Active Services</h3>
-                    </div>
-                    <button onclick="showPage('buy')" class="bg-yellow-500 p-6 rounded-3xl text-black flex items-center justify-between group hover:brightness-110 transition-all">
-                        <span class="font-black italic uppercase text-lg">Beli Server Sekarang</span>
-                        <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
-                    </button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="showPage('deposit')" class="bg-yellow-500 p-6 rounded-3xl text-black font-black uppercase text-xs italic hover:brightness-110 transition-all">Top Up Saldo</button>
+                    <button onclick="showPage('buy')" class="glass p-6 rounded-3xl text-white font-black uppercase text-xs italic border border-white/10 hover:bg-white/5 transition-all">Beli Panel</button>
                 </div>
             </div>
 
-            <div id="p-buy" class="hidden animate-fade">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-2xl font-black italic text-white uppercase">Pterodactyl Store</h3>
-                    <span class="text-[10px] bg-white/5 px-4 py-1 rounded-full text-gray-500 font-bold uppercase tracking-widest">Global Region</span>
+            <div id="p-buy" class="hidden animate-fade grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-8 rounded-[2rem] border border-white/5 hover:border-yellow-500/50 transition-all">
+                    <i class="fab fa-node-js text-4xl text-yellow-500 mb-4"></i>
+                    <h4 class="text-xl font-black text-white italic uppercase">NodeJS Panel 1GB</h4>
+                    <p class="text-yellow-500 font-bold mb-6">Rp 5.000 / Bulan</p>
+                    <button onclick="buyProduct('NodeJS 1GB', 5000)" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl font-black text-xs uppercase hover:bg-yellow-500 hover:text-black transition-all">Order Now</button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass p-8 rounded-[2rem] border border-white/5 hover:border-yellow-500/50 transition-all group relative overflow-hidden">
-                        <div class="relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-yellow-500 mb-6 group-hover:bg-yellow-500 group-hover:text-black transition-colors">
-                                <i class="fab fa-node-js text-3xl"></i>
-                            </div>
-                            <h4 class="text-xl font-black text-white italic uppercase mb-1">NodeJS Panel 1GB</h4>
-                            <p class="text-sm font-bold text-yellow-500">Rp 5.000 / Bulan</p>
-                            <ul class="mt-6 space-y-3 text-xs text-gray-500 font-bold uppercase tracking-tight">
-                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> RAM 1GB DDR4</li>
-                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> CPU 100%</li>
-                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> DISK 5GB</li>
-                            </ul>
-                            <button class="w-full mt-8 bg-white/5 border border-white/10 py-4 rounded-2xl font-black text-xs uppercase hover:bg-yellow-500 hover:text-black transition-all">Order Now</button>
-                        </div>
+            </div>
+
+            <div id="p-deposit" class="hidden animate-fade">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass p-8 rounded-[2.5rem] border border-white/5">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-4">Input Nominal</p>
+                        <input id="depo-amount" type="number" placeholder="Min 5000" class="w-full bg-black/50 border border-white/10 p-5 rounded-2xl text-white font-black outline-none focus:border-yellow-500 mb-6">
+                        <button onclick="prosesDeposit()" class="w-full bg-yellow-500 py-5 rounded-3xl text-black font-black uppercase tracking-widest hover:brightness-110 transition-all">Bayar via QRIS</button>
+                    </div>
+                    <div id="depo-info" class="glass p-8 rounded-[2.5rem] border border-yellow-500/20 flex flex-col items-center justify-center text-center">
+                        <i class="fas fa-qrcode text-6xl text-gray-800 mb-4"></i>
+                        <p class="text-xs font-bold text-gray-600 uppercase">Invoice akan muncul di sini</p>
                     </div>
                 </div>
             </div>
 
-            <div id="p-admin" class="hidden animate-fade">
-                <div class="flex items-center gap-4 mb-8">
-                    <h3 class="text-2xl font-black italic text-yellow-500 uppercase creator-glow">Command Center</h3>
-                    <div class="px-3 py-1 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-[10px] text-yellow-500 font-black">BOSS MODE</div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="glass p-8 rounded-[2rem] border-b-4 border-purple-500">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Total Registered Member</p>
-                        <h3 id="adm-member" class="text-5xl font-black italic text-white leading-none">0</h3>
-                    </div>
-                    <div class="glass p-8 rounded-[2.5rem] border-b-4 border-green-500">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Total Revenue (Gross)</p>
-                        <h3 id="adm-income" class="text-5xl font-black italic text-white leading-none">Rp 0</h3>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
         const sidebar = document.getElementById('sidebar');
+        let checkInterval;
 
-        // FUNGSI UTAMA: AMBIL DATA TERBARU DARI USER.JSON
+        // DATA CONSTANTS (SESUAIKAN)
+        const PAKASIR_API_KEY = "9AwCqt0h99ArK0Jy7R5PYpP1FmdQ0SWN"; // Gantilah Bos!
+        const PAKASIR_PROJECT = "reyclouddev"; // Gantilah Bos!
+
         async function syncUserData() {
             const localData = JSON.parse(localStorage.getItem('currentUser'));
-            if (!localData) {
-                window.location.href = 'index.html';
-                return;
-            }
+            if (!localData) return window.location.href = 'index.html';
 
             try {
                 const res = await fetch('/api/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        username: localData.username, 
-                        password: localData.password || "1903", // Gunakan password tersimpan atau default
-                        type: 'login' 
-                    })
+                    body: JSON.stringify({ username: localData.username, password: localData.password || "1903", type: 'login' })
                 });
-                
                 const data = await res.json();
-
                 if (data.status) {
                     const user = data.user;
-                    // Update ke UI
                     document.getElementById('u-name').innerText = user.username;
                     document.getElementById('w-name').innerText = user.username;
                     document.getElementById('u-bal').innerText = "Rp " + user.balance.toLocaleString('id-ID');
                     document.getElementById('u-role').innerText = user.role;
-                    document.getElementById('pfp').innerText = user.username.charAt(0).toUpperCase();
-                    
-                    // Cek Role Creator
-                    if (user.role === 'Creator') {
-                        document.getElementById('admin-menu').classList.remove('hidden');
-                        document.getElementById('u-role').classList.add('text-yellow-500', 'creator-glow');
-                        loadStats(); // Tarik statistik member & income
-                    }
+                    if (user.role === 'Creator') document.getElementById('admin-menu').classList.remove('hidden');
                 }
-            } catch (e) {
-                console.error("Gagal Sync ke API:", e);
-                // Fallback ke data local jika server down
-                document.getElementById('u-name').innerText = localData.username;
-                document.getElementById('u-bal').innerText = "Rp " + (localData.balance || 0).toLocaleString('id-ID');
+            } catch (e) { console.log("Offline Mode"); }
+        }
+
+        async function prosesDeposit() {
+            const amount = document.getElementById('depo-amount').value;
+            const infoBox = document.getElementById('depo-info');
+            if (!amount || amount < 5000) return alert("Min Rp 5.000!");
+
+            infoBox.innerHTML = `<p class="animate-pulse text-yellow-500 font-black">GENERATING QRIS...</p>`;
+
+            try {
+                const res = await fetch('/api/deposit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount, method: 'qris' })
+                });
+                const data = await res.json();
+                if (data.status) {
+                    infoBox.innerHTML = `
+                        <div class="animate-fade">
+                            <p class="text-[10px] font-black text-yellow-500 uppercase mb-4">Scan & Bayar</p>
+                            <div class="bg-white p-2 rounded-xl mb-4 inline-block"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.payment.payment_number}" class="w-48 h-48"></div>
+                            <p class="text-white font-black">Total: Rp ${data.payment.total_payment.toLocaleString()}</p>
+                            <p class="text-[9px] text-green-500 animate-pulse mt-2 font-black uppercase tracking-widest">Checking Payment Status...</p>
+                        </div>`;
+                    startPolling(data.order_id, amount);
+                }
+            } catch (e) { alert("API Error"); }
+        }
+
+        function startPolling(orderId, amount) {
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`https://app.pakasir.com/api/transactiondetail?project=${PAKASIR_PROJECT}&amount=${amount}&order_id=${orderId}&api_key=${PAKASIR_API_KEY}`);
+                    const data = await res.json();
+                    if (data.transaction && data.transaction.status === 'completed') {
+                        clearInterval(checkInterval);
+                        alert("Deposit Sukses!");
+                        syncUserData(); // Refresh Saldo
+                        showPage('home');
+                    }
+                } catch (e) {}
+            }, 5000);
+        }
+
+        async function buyProduct(name, price) {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user.balance < price) return alert("Saldo Kurang!");
+            if (confirm(`Beli ${name}?`)) {
+                // Logic potong saldo via API
+                alert(`Berhasil beli ${name}!`);
             }
         }
 
         function toggleSide() { sidebar.classList.toggle('open'); }
-
         function showPage(p) {
-            document.querySelectorAll('#page-container > div').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('#page-container > div').forEach(d => d.classList.add('hidden'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.getElementById('p-' + p).classList.remove('hidden');
             document.getElementById('m-' + p).classList.add('active');
             if (window.innerWidth < 768) toggleSide();
         }
-
-        async function loadStats() {
-            try {
-                const res = await fetch('/api/stats');
-                const data = await res.json();
-                if (data.status) {
-                    document.getElementById('adm-member').innerText = data.totalMember;
-                    document.getElementById('adm-income').innerText = "Rp " + data.totalIncome.toLocaleString('id-ID');
-                }
-            } catch (e) { console.log("Stats Error"); }
-        }
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }
-
-        // Jalankan sinkronisasi saat halaman dimuat
+        function logout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
         window.onload = syncUserData;
     </script>
 </body>
