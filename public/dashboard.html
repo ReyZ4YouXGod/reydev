@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #050506; color: #facc15; font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { background: #050506; color: #facc15; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
         #sidebar { transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 1000; }
         #sidebar.open { transform: translateX(0); }
@@ -15,14 +16,16 @@
         .menu-item:hover, .menu-item.active { background: rgba(250, 204, 21, 0.1); color: #facc15; }
         .menu-item i { width: 24px; font-size: 18px; margin-right: 12px; }
         .creator-glow { text-shadow: 0 0 15px #facc15; }
+        .animate-fade { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen">
 
     <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-black border-r border-white/5 p-6 flex flex-col">
         <div class="flex items-center justify-between mb-12">
-            <h1 class="text-2xl font-black italic uppercase">REY<span class="text-white">CLOUD</span></h1>
-            <button onclick="toggleSide()" class="md:hidden text-gray-500"><i class="fas fa-times"></i></button>
+            <h1 class="text-2xl font-black italic uppercase tracking-tighter">REY<span class="text-white">CLOUD</span></h1>
+            <button onclick="toggleSide()" class="md:hidden text-gray-500"><i class="fas fa-times text-xl"></i></button>
         </div>
 
         <nav class="flex-grow">
@@ -32,68 +35,176 @@
             <div class="h-[1px] bg-white/5 my-6"></div>
             
             <div id="admin-menu" class="hidden space-y-1">
-                <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] mb-3 ml-4">Management</p>
+                <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] mb-3 ml-4">Creator Tools</p>
                 <div onclick="showPage('admin')" class="menu-item text-yellow-500" id="m-admin"><i class="fas fa-crown"></i> Admin Panel</div>
             </div>
         </nav>
 
         <div class="pt-6 border-t border-white/5">
-            <button onclick="logout()" class="menu-item text-red-500 w-full hover:bg-red-500/10"><i class="fas fa-power-off"></i> Logout Account</button>
+            <button onclick="logout()" class="menu-item text-red-500 w-full hover:bg-red-500/10 transition-colors"><i class="fas fa-power-off"></i> Logout</button>
         </div>
     </div>
 
-    <div class="min-h-screen">
+    <div class="min-h-screen transition-all duration-300">
         <nav class="p-4 glass sticky top-0 flex justify-between items-center z-50 border-b border-white/5">
             <div class="flex items-center space-x-4">
-                <button onclick="toggleSide()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-yellow-500"><i class="fas fa-bars"></i></button>
-                <h2 class="font-black italic text-white uppercase tracking-tighter hidden md:block">Control Panel</h2>
+                <button onclick="toggleSide()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-yellow-500 hover:bg-yellow-500/10 transition-all"><i class="fas fa-bars"></i></button>
+                <h2 class="font-black italic text-white uppercase tracking-tighter hidden md:block">Control Center</h2>
             </div>
             <div class="flex items-center space-x-4">
                 <div class="text-right">
-                    <p id="u-name" class="text-white font-black text-sm leading-none italic uppercase">User</p>
-                    <p id="u-role" class="text-[9px] font-bold text-gray-500 uppercase mt-1">Member</p>
+                    <p id="u-name" class="text-white font-black text-sm leading-none italic uppercase">Loading...</p>
+                    <p id="u-role" class="text-[9px] font-bold text-gray-500 uppercase mt-1">Status Member</p>
                 </div>
-                <div id="pfp" class="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center text-black font-black">R</div>
+                <div id="pfp" class="w-11 h-11 rounded-xl bg-yellow-500 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-yellow-500/20">R</div>
             </div>
         </nav>
 
         <div id="page-container" class="p-6 max-w-6xl mx-auto">
-            <div id="p-home" class="space-y-6">
-                <div class="glass p-8 rounded-[2rem] border-l-4 border-yellow-500 relative overflow-hidden">
-                    <h2 class="text-3xl font-black italic text-white uppercase leading-none">Welcome Back, <br><span class="text-yellow-500" id="w-name">REYCLOUD</span>!</h2>
-                    <p class="text-gray-500 text-xs mt-4 uppercase font-bold tracking-widest">Saldo Anda: <span class="text-white" id="u-bal">Rp 0</span></p>
-                    <i class="fas fa-bolt absolute -right-4 -bottom-4 text-9xl text-white/5 -rotate-12"></i>
+            
+            <div id="p-home" class="animate-fade space-y-6">
+                <div class="glass p-8 rounded-[2.5rem] border-l-4 border-yellow-500 relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h2 class="text-3xl font-black italic text-white uppercase leading-tight">Welcome Back, <br><span class="text-yellow-500" id="w-name">USER</span>! 👑</h2>
+                        <div class="flex items-center mt-6 bg-black/40 backdrop-blur-md w-fit px-4 py-2 rounded-full border border-white/10">
+                            <i class="fas fa-wallet text-yellow-500 mr-3"></i>
+                            <p id="u-bal" class="text-white font-black tracking-widest uppercase text-sm">Rp 0</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-bolt absolute -right-6 -bottom-6 text-[10rem] text-white/5 -rotate-12 group-hover:scale-110 transition-transform"></i>
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="glass p-6 rounded-3xl border border-white/5">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">Server Status</p>
-                        <h3 class="text-xl font-black italic text-white uppercase">No Active Server</h3>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">Server Active</p>
+                        <h3 class="text-xl font-black italic text-white uppercase">No Active Services</h3>
                     </div>
-                    <button onclick="showPage('buy')" class="bg-yellow-500 p-6 rounded-3xl text-black flex items-center justify-between group">
-                        <span class="font-black italic uppercase">Beli Server Sekarang</span>
-                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition"></i>
+                    <button onclick="showPage('buy')" class="bg-yellow-500 p-6 rounded-3xl text-black flex items-center justify-between group hover:brightness-110 transition-all">
+                        <span class="font-black italic uppercase text-lg">Beli Server Sekarang</span>
+                        <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="p-buy" class="hidden animate-fade-in">
-                <h3 class="text-xl font-black italic text-white uppercase mb-6"><i class="fas fa-shopping-cart text-yellow-500 mr-2"></i> Pterodactyl Store</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="glass p-6 rounded-3xl border border-white/10 hover:border-yellow-500 transition-all group">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-yellow-500"><i class="fab fa-node-js text-2xl"></i></div>
-                            <span class="text-[10px] font-black bg-yellow-500 text-black px-2 py-1 rounded-lg">BEST SELLER</span>
+            <div id="p-buy" class="hidden animate-fade">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-2xl font-black italic text-white uppercase">Pterodactyl Store</h3>
+                    <span class="text-[10px] bg-white/5 px-4 py-1 rounded-full text-gray-500 font-bold uppercase tracking-widest">Global Region</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass p-8 rounded-[2rem] border border-white/5 hover:border-yellow-500/50 transition-all group relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-yellow-500 mb-6 group-hover:bg-yellow-500 group-hover:text-black transition-colors">
+                                <i class="fab fa-node-js text-3xl"></i>
+                            </div>
+                            <h4 class="text-xl font-black text-white italic uppercase mb-1">NodeJS Panel 1GB</h4>
+                            <p class="text-sm font-bold text-yellow-500">Rp 5.000 / Bulan</p>
+                            <ul class="mt-6 space-y-3 text-xs text-gray-500 font-bold uppercase tracking-tight">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> RAM 1GB DDR4</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> CPU 100%</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> DISK 5GB</li>
+                            </ul>
+                            <button class="w-full mt-8 bg-white/5 border border-white/10 py-4 rounded-2xl font-black text-xs uppercase hover:bg-yellow-500 hover:text-black transition-all">Order Now</button>
                         </div>
-                        <h4 class="text-xl font-black text-white italic uppercase">NodeJS Panel 1GB</h4>
-                        <p class="text-xs text-gray-500 mt-1 uppercase font-bold">Rp 5.000 / Bulan</p>
-                        <button class="w-full mt-6 bg-white/5 border border-white/10 py-3 rounded-2xl font-black text-xs uppercase hover:bg-yellow-500 hover:text-black transition-all">Order Now</button>
                     </div>
                 </div>
             </div>
 
-            <div id="p-admin" class="hidden animate-fade-in">
-                <h3 class="text-xl font-black italic text-yellow-500 uppercase mb-6 creator-glow"><i class="fas fa-crown mr-2"></i> Command Center</h3>
+            <div id="p-admin" class="hidden animate-fade">
+                <div class="flex items-center gap-4 mb-8">
+                    <h3 class="text-2xl font-black italic text-yellow-500 uppercase creator-glow">Command Center</h3>
+                    <div class="px-3 py-1 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-[10px] text-yellow-500 font-black">BOSS MODE</div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="glass p-6 rounded-3xl border-b-4 border-purple-500">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-1">Total Members</p>
-                        <h3 id="adm-member" class="text-4xl font-black italic text-white
+                    <div class="glass p-8 rounded-[2rem] border-b-4 border-purple-500">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Total Registered Member</p>
+                        <h3 id="adm-member" class="text-5xl font-black italic text-white leading-none">0</h3>
+                    </div>
+                    <div class="glass p-8 rounded-[2.5rem] border-b-4 border-green-500">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Total Revenue (Gross)</p>
+                        <h3 id="adm-income" class="text-5xl font-black italic text-white leading-none">Rp 0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+
+        // FUNGSI UTAMA: AMBIL DATA TERBARU DARI USER.JSON
+        async function syncUserData() {
+            const localData = JSON.parse(localStorage.getItem('currentUser'));
+            if (!localData) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: localData.username, 
+                        password: localData.password || "1903", // Gunakan password tersimpan atau default
+                        type: 'login' 
+                    })
+                });
+                
+                const data = await res.json();
+
+                if (data.status) {
+                    const user = data.user;
+                    // Update ke UI
+                    document.getElementById('u-name').innerText = user.username;
+                    document.getElementById('w-name').innerText = user.username;
+                    document.getElementById('u-bal').innerText = "Rp " + user.balance.toLocaleString('id-ID');
+                    document.getElementById('u-role').innerText = user.role;
+                    document.getElementById('pfp').innerText = user.username.charAt(0).toUpperCase();
+                    
+                    // Cek Role Creator
+                    if (user.role === 'Creator') {
+                        document.getElementById('admin-menu').classList.remove('hidden');
+                        document.getElementById('u-role').classList.add('text-yellow-500', 'creator-glow');
+                        loadStats(); // Tarik statistik member & income
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal Sync ke API:", e);
+                // Fallback ke data local jika server down
+                document.getElementById('u-name').innerText = localData.username;
+                document.getElementById('u-bal').innerText = "Rp " + (localData.balance || 0).toLocaleString('id-ID');
+            }
+        }
+
+        function toggleSide() { sidebar.classList.toggle('open'); }
+
+        function showPage(p) {
+            document.querySelectorAll('#page-container > div').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById('p-' + p).classList.remove('hidden');
+            document.getElementById('m-' + p).classList.add('active');
+            if (window.innerWidth < 768) toggleSide();
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                if (data.status) {
+                    document.getElementById('adm-member').innerText = data.totalMember;
+                    document.getElementById('adm-income').innerText = "Rp " + data.totalIncome.toLocaleString('id-ID');
+                }
+            } catch (e) { console.log("Stats Error"); }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Jalankan sinkronisasi saat halaman dimuat
+        window.onload = syncUserData;
+    </script>
+</body>
+</html>
