@@ -1,37 +1,36 @@
 const fs = require('fs');
 const path = require('path');
 
-// Lokasi database (sementara di folder /tmp agar Vercel tidak error saat nulis)
-const dbPath = path.join('/tmp', 'user.json');
-
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+    // Tambahkan header CORS biar gak diblokir browser
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
 
-    const { username, password, type } = req.body;
+    if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
 
-    // Inisialisasi database jika belum ada di memori sementara Vercel
-    if (!fs.existsSync(dbPath)) {
-        const initialData = [{ username: "ReyCloud", password: "Rey1903", role: "Creator", balance: 200000 }];
-        fs.writeFileSync(dbPath, JSON.stringify(initialData, null, 2));
-    }
+    const { username, password } = req.body;
 
-    let users = JSON.parse(fs.readFileSync(dbPath));
-
-    if (type === 'reg') {
-        if (users.find(u => u.username === username)) {
-            return res.json({ status: false, message: "Username sudah ada!" });
+    try {
+        // Coba baca file user.json yang ada di root folder
+        const filePath = path.join(process.cwd(), 'user.json');
+        
+        if (!fs.existsSync(filePath)) {
+            return res.status(500).json({ status: false, message: "File user.json tidak ditemukan di server!" });
         }
-        users.push({ username, password, role: "Member", balance: 0 });
-        fs.writeFileSync(dbPath, JSON.stringify(users, null, 2));
-        return res.json({ status: true, message: "Berhasil Daftar!" });
-    }
 
-    if (type === 'login') {
-        const user = users.find(u => u.username === username && u.password === password);
+        const fileData = fs.readFileSync(filePath, 'utf8');
+        const users = JSON.parse(fileData);
+
+        // Cari user yang cocok
+        const user = users.find(u => u.username === username && String(u.password) === String(password));
+
         if (user) {
-            return res.json({ status: true, user });
+            return res.status(200).json({ status: true, user });
         } else {
-            return res.json({ status: false, message: "Username/Password Salah!" });
+            return res.status(401).json({ status: false, message: "Username atau Password Salah!" });
         }
+
+    } catch (error) {
+        return res.status(500).json({ status: false, message: "Error: " + error.message });
     }
 }
