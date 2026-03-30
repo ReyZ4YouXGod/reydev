@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
     try {
         // Coba baca file user.json yang ada di root folder
-        const filePath = path.join(process.cwd(), 'user.json');
+        const filePath = path.join(process.cwd(), 'users.json');
         
         if (!fs.existsSync(filePath)) {
             return res.status(500).json({ status: false, message: "File user.json tidak ditemukan di server!" });
