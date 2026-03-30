@@ -1,6 +1,8 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/public/$1" }
-  ]
+  "name": "reydev",
+  "version": "1.0.0",
+  "main": "api/auth.js",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
 }
