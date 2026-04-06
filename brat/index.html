@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReyCloud | Brat Cewek Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        #resultImg {
+            display: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="glass w-full max-w-md p-8 rounded-3xl neon-border text-center">
+        
+        <!-- Back Button -->
+        <div class="mb-6 text-left">
+            <a href="dashboard"
+               class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-all">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <h1 class="text-3xl font-extrabold mb-2 tracking-tight">REYCLOUD <span class="text-gray-400">MAKER</span></h1>
+        <p class="text-gray-500 text-sm mb-8">Buat gambar Brat Cewek otomatis hanya dengan teks.</p>
+
+        <div class="space-y-4">
+            <input type="text" id="inputText" 
+                class="w-full bg-black/50 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-white/40 transition-all text-center" 
+                placeholder="Masukkan teks di sini...">
+            
+            <button onclick="generateImage()" id="btnGen"
+                class="w-full bg-white text-black font-bold p-4 rounded-xl hover:bg-gray-200 transition-all active:scale-95">
+                GENERATE SEKARANG
+            </button>
+        </div>
+
+        <div id="loading" class="hidden mt-8 text-sm text-gray-400 animate-pulse">
+            Sedang meracik gambar... ⏳
+        </div>
+
+        <div class="mt-8">
+            <img id="resultImg" src="" alt="Hasil Generate" class="w-full shadow-2xl mx-auto">
+            
+            <button id="downloadBtn" onclick="downloadImage()"
+                class="hidden mt-4 inline-block text-sm text-gray-300 hover:text-white underline">
+                Download Gambar
+            </button>
+        </div>
+
+        <p class="mt-8 text-[10px] text-gray-600 uppercase tracking-widest">© 2026 ReyCloudDev - Solusi Hosting Terbaik</p>
+    </div>
+
+    <script>
+        let currentImageUrl = "";
+
+        function generateImage() {
+            const text = document.getElementById('inputText').value.trim();
+            const img = document.getElementById('resultImg');
+            const btn = document.getElementById('btnGen');
+            const loading = document.getElementById('loading');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            if (!text) {
+                alert("Masukkan teks dulu, Bos!");
+                return;
+            }
+
+            loading.classList.remove('hidden');
+            img.style.display = 'none';
+            downloadBtn.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerText = "PROCESSING...";
+
+            const apiUrl = `https://api.deline.web.id/maker/cewekbrat?text=${encodeURIComponent(text)}`;
+            currentImageUrl = apiUrl;
+
+            const tempImg = new Image();
+            tempImg.crossOrigin = "anonymous";
+            tempImg.src = apiUrl;
+
+            tempImg.onload = function() {
+                img.src = apiUrl;
+                img.style.display = 'block';
+                loading.classList.add('hidden');
+                downloadBtn.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerText = "GENERATE SEKARANG";
+            };
+            
+            tempImg.onerror = function() {
+                alert("Gagal mengambil data dari API.");
+                loading.classList.add('hidden');
+                btn.disabled = false;
+                btn.innerText = "GENERATE SEKARANG";
+            };
+        }
+
+        async function downloadImage() {
+            if (!currentImageUrl) {
+                alert("Generate dulu gambarnya, jangan ngaco.");
+                return;
+            }
+
+            try {
+                const response = await fetch(currentImageUrl);
+                if (!response.ok) throw new Error("Gagal fetch gambar");
+
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = blobUrl;
+                a.download = "reycloud-brat.png";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                alert("Download gagal. Kemungkinan server API lu rese / kena CORS.");
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
