@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading ReyCloud...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.45) contrast(1.08) grayscale(30%);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.78));
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      padding: 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    .logo {
+      font-size: 42px;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -2px;
+      margin-bottom: 14px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+
+    .logo span {
+      color: #707070;
+    }
+
+    .text {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.78);
+      margin-bottom: 24px;
+    }
+
+    .bar {
+      width: 180px;
+      height: 5px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: auto;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ffffff, #8a8a8a);
+      border-radius: 999px;
+    }
+
+    .fade-out {
+      animation: fadeOut 0.8s ease forwards;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.82; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    @media (max-width: 420px) {
+      .logo {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <video class="loading-video" id="loadingVideo" autoplay muted playsinline>
+      <source src="https://b.top4top.io/m_3748khlod6.mp4" type="video/mp4">
+    </video>
+
+    <div class="overlay"></div>
+
+    <div class="content">
+      <div class="logo">REY<span>CLOUD</span></div>
+      <div class="text">INITIALIZING SYSTEM</div>
+
+      <div class="bar">
+        <div class="progress" id="progressBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("loadingVideo");
+    const progressBar = document.getElementById("progressBar");
+    const loadingScreen = document.getElementById("loadingScreen");
+
+    let redirected = false;
+
+    function goToDashboard() {
+      if (redirected) return;
+      redirected = true;
+
+      loadingScreen.classList.add("fade-out");
+
+      setTimeout(() => {
+        window.location.href = "dashboard";
+      }, 800);
+    }
+
+    // Kalau metadata video sudah kebaca, pakai durasi asli
+    video.addEventListener("loadedmetadata", () => {
+      const duration = video.duration;
+
+      // Jaga-jaga kalau duration aneh / gagal kebaca
+      if (!duration || isNaN(duration)) return;
+
+      progressBar.style.transition = `width ${duration}s linear`;
+
+      // kecil delay biar transisi kebaca
+      setTimeout(() => {
+        progressBar.style.width = "100%";
+      }, 100);
+    });
+
+    // Saat video selesai, langsung pindah
+    video.addEventListener("ended", () => {
+      goToDashboard();
+    });
+
+    // Backup kalau video gagal dimuat
+    video.addEventListener("error", () => {
+      setTimeout(() => {
+        goToDashboard();
+      }, 4000);
+    });
+
+    // Backup tambahan kalau autoplay dicegat browser
+    setTimeout(() => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+    }, 500);
+  </script>
+
+</body>
+</html>
